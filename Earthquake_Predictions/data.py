@@ -1,5 +1,5 @@
 import urllib.request, urllib.parse, time
-
+import pandas as pd
 
 
 class APIquery(object):
@@ -113,18 +113,16 @@ class APIquery(object):
         with open(filename, "wb") as btxt:
             btxt.write(self.result)
 
+def preprocesData(plaindata):
+    #Only specific columns selected
+    processed_data = plaindata.filter(['time','latitude','longitude','mag','place'],axis=1)
+    #Checking for any NaN values in dataframe
+
+    check_for_nan = processed_data.isnull().values.any()
+    print("There is Nan Values in Dataframe: " , check_for_nan)
+
+    return processed_data
 
 
-if __name__ == "__main__":
-    print("USGS APIquery Example")
-
-    # Greater San Francisco area, 1983 through 2012
-    APIquery(starttime="2018-01-01", endtime="2021-05-10",
-             minmagnitude="0.1",
-             latitude="39.925533", longitude="32.866287",
-             minradiuskm="0", maxradiuskm="589",
-             reviewstatus="reviewed",
-             filename="usgsQuery_TR_83-12.csv",
-             format="csv")
 
 
