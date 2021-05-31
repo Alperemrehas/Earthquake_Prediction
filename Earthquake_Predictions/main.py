@@ -1,6 +1,8 @@
 import data
 import numpy as np
 import pandas as pd
+import plotly.graph_objects as go
+
 
 
 def dataReader(method):
@@ -36,3 +38,58 @@ if __name__ == "__main__":
     processed_data = data.preprocesData(earthquakes)
     print("The DATA After Drop")
     print(processed_data)
+
+    edges = data.extractEdges(processed_data)
+    n = 10
+    m = 20
+
+    latitudes, longitudes = data.divideIntoGrid(edges, n, m)
+
+    data.addGridCoordinatesAndYear(processed_data, edges, n, m)
+
+    # print(processed_data[(processed_data.time)])
+
+    print(processed_data)
+
+    print(processed_data[(processed_data['year'] == '1990')])
+
+    print(processed_data.dtypes)
+
+    fig = go.Figure(go.Scattermapbox())
+
+    for latitude in latitudes:
+        fig.add_trace(go.Scattermapbox(
+            mode = "lines",
+            lon = [edges['minLongitude'], edges['maxLongitude']],
+            lat = [latitude, latitude],
+            marker = {'color': 'red'}))
+    
+    for longitude in longitudes:
+        fig.add_trace(go.Scattermapbox(
+            mode = "lines",
+            lon = [longitude, longitude],
+            lat = [edges['minLatitude'], edges['maxLatitude']],
+            marker = {'color': 'red'}))
+
+    for i in range(20):
+        fig.add_trace(go.Scattermapbox(
+            mode = "markers",
+            lon = [processed_data.iloc[i]['longitude']],
+            lat = [processed_data.iloc[i]['latitude']],
+            marker = {'color': 'blue', 'size': 20}))
+    
+    total = 0
+
+    for i in range(2006, 2022):
+        print(i, len(processed_data[(processed_data['year'] == str(i))]))
+        total += len(processed_data[(processed_data['year'] == str(i))])
+        print(i, total)
+
+    # fig.update_layout(
+    #     margin ={'l':0,'t':0,'b':0,'r':0},
+    #     mapbox = {
+    #         'center': {'lon': (edges["maxLongitude"] + edges["minLongitude"]) / 2, 'lat': (edges["minLatitude"] + edges["maxLatitude"]) / 2},
+    #         'style': "stamen-terrain",
+    #         'zoom': 5})
+
+    fig.show()

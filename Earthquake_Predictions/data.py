@@ -1,5 +1,8 @@
 import urllib.request, urllib.parse, time
 import pandas as pd
+import math
+import datetime
+
 
 
 class APIquery(object):
@@ -123,6 +126,67 @@ def preprocesData(plaindata):
 
     return processed_data
 
+def extractEdges(df): 
+    minRows = df.min()
+    maxRows = df.max()
 
+    minLatitude = minRows['latitude']
+    minLongitude = minRows['longitude']
+    maxLatitude = maxRows['latitude']
+    maxLongitude = maxRows['longitude']
+
+    return {
+        "minLatitude": minLatitude,
+        "minLongitude": minLongitude,
+        "maxLatitude": maxLatitude,
+        "maxLongitude": maxLongitude
+    }
+
+
+def divideIntoGrid(edges, n, m):
+    deltaLatitude = (edges['maxLatitude'] - edges['minLatitude']) / n
+    deltaLongitude = (edges['maxLongitude'] - edges['minLongitude']) / m
+
+    latitudes = [edges['minLatitude']]
+    longitudes = [edges['minLongitude']]
+
+    for i in range(1, n):
+        latitudes.append(edges['minLatitude'] + i * deltaLatitude)
+    
+    for i in range(1, m):
+        longitudes.append(edges['minLongitude'] + i * deltaLongitude)
+
+    latitudes.append(edges['maxLatitude'])
+    longitudes.append(edges['maxLongitude'])
+
+    return latitudes, longitudes
+
+def addGridCoordinatesAndYear(df, edges, n, m):
+    deltaLatitude = (edges['maxLatitude'] - edges['minLatitude']) / n
+    deltaLongitude = (edges['maxLongitude'] - edges['minLongitude']) / m
+
+    ns = []
+    ms = []
+    years = []
+
+    for row in df.iterrows():
+        latitude = row[1]['latitude']
+        longitude = row[1]['longitude']
+
+        years.append(row[1]['time'].split('-')[0])
+        print(type(str(row[1]['time'].split('-')[0])))
+        
+        y = math.ceil((latitude - edges['minLatitude']) / deltaLatitude)
+        x = math.ceil((longitude - edges['minLongitude']) / deltaLongitude)
+
+        ns.append(x)
+        ms.append(y)
+    
+    df['x'] = ns
+    df['y'] = ms
+    df['year'] = years
+
+
+    
 
 
