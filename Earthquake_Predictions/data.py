@@ -120,11 +120,14 @@ def preprocesData(plaindata):
     #Only specific columns selected
     processed_data = plaindata.filter(['time','latitude','longitude','mag','place'],axis=1)
     #Checking for any NaN values in dataframe
-
     check_for_nan = processed_data.isnull().values.any()
     print("There is Nan Values in Dataframe: " , check_for_nan)
+    #Cleaning The DF From Earthquakes Which Are Not Occured in Turkey
+    earthquakes_tr = processed_data[processed_data.place.str.contains("Turkey")== True]
+    #Reseting The Index
+    earthquakes_tr = earthquakes_tr.reset_index(drop=True)
 
-    return processed_data
+    return earthquakes_tr
 
 def extractEdges(df): 
     minRows = df.min()
