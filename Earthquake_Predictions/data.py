@@ -127,7 +127,7 @@ def preprocesData(plaindata):
     #Reseting The Index
     earthquakes_tr = earthquakes_tr.reset_index(drop=True)
 
-    return earthquakes_tr
+    return earthquakes_tr.dropna()
 
 def extractEdges(df): 
     minRows = df.min()
@@ -177,7 +177,6 @@ def addGridCoordinatesAndYear(df, edges, n, m):
         longitude = row[1]['longitude']
 
         years.append(row[1]['time'].split('-')[0])
-        print(type(str(row[1]['time'].split('-')[0])))
         
         y = math.ceil((latitude - edges['minLatitude']) / deltaLatitude)
         x = math.ceil((longitude - edges['minLongitude']) / deltaLongitude)
