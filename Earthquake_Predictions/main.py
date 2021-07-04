@@ -1,4 +1,5 @@
 import data
+import Collabrative_Filtering
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -44,10 +45,10 @@ if __name__ == "__main__":
 
 
     print("***************Raw Data***************")
-    print(earthquakes)
+    # print(earthquakes)
     processed_data = data.preprocesData(earthquakes)
     print("The DATA After Drop")
-    print(processed_data)
+    # print(processed_data)
 
     edges = data.extractEdges(processed_data)
     n = 10
@@ -59,13 +60,15 @@ if __name__ == "__main__":
 
     # print(processed_data[(processed_data.time)])
 
-    print(processed_data)
+    # print(processed_data)
 
-    print(processed_data[(processed_data['year'] == '1990')])
+    # print(processed_data[(processed_data['year'] == '1990')])
 
-    print(processed_data.dtypes)
+    # print(processed_data.dtypes)
 
     fig = go.Figure(go.Scattermapbox())
+
+
 
     for latitude in latitudes:
         fig.add_trace(go.Scattermapbox(
@@ -91,9 +94,9 @@ if __name__ == "__main__":
     total = 0
 
     for i in range(2006, 2022):
-        print(i, len(processed_data[(processed_data['year'] == str(i))]))
+        # print(i, len(processed_data[(processed_data['year'] == str(i))]))
         total += len(processed_data[(processed_data['year'] == str(i))])
-        print(i, total)
+        # print(i, total)
 
     # fig.update_layout(
     #     margin ={'l':0,'t':0,'b':0,'r':0},
@@ -102,4 +105,9 @@ if __name__ == "__main__":
     #         'style': "stamen-terrain",
     #         'zoom': 5})
 
-    fig.show()
+    # fig.show()
+
+#     Calling for Collabrative Filtering
+    print(Collabrative_Filtering.collab_filter(processed_data))
+
+

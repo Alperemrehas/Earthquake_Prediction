@@ -177,7 +177,7 @@ def addGridCoordinatesAndYear(df, edges, n, m):
         longitude = row[1]['longitude']
 
         years.append(row[1]['time'].split('-')[0])
-        print(type(str(row[1]['time'].split('-')[0])))
+        # print(type(str(row[1]['time'].split('-')[0])))
         
         y = math.ceil((latitude - edges['minLatitude']) / deltaLatitude)
         x = math.ceil((longitude - edges['minLongitude']) / deltaLongitude)
@@ -188,6 +188,7 @@ def addGridCoordinatesAndYear(df, edges, n, m):
     df['x'] = ns
     df['y'] = ms
     df['year'] = years
+
 
 
     
